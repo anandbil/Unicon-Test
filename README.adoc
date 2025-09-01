@@ -1,0 +1,30 @@
+= modernization-unicorn-store
+
+:imagesdir: static
+
+AWS Sample Application for containerizing a .NET application
+
+image::images/unicornstore.png[Unicorn Store]
+
+== License
+
+This library is licensed under the Apache 2.0 License. 
+
+== Prerequisites
+
+To get started you will need:
+
+- https://docs.docker.com/install/[Docker] installed on your local machine.
+- https://docs.docker.com/compose/install/[Docker Compose]
+- https://dotnet.microsoft.com/download[.NET Core 3]
+- An IDE for building .NET Core applications such as https://visualstudio.microsoft.com/[Visual Studio]
+
+Once you have the prerequisites installed on your local development machine you should be able to run the Unicorn Store locally either in your IDE or in a local container. The Unicorn Store uses https://www.microsoft.com/en-us/sql-server/default.aspx[SQL Server] for the backend by default and is seeded with data on startup. You will need to either provision or have access to a database. The below workshops like link:content/secrets/_index.md[Securing Your .NET Container Secrets] handle this for you via https://aws.amazon.com/cloudformation/[CloudFromation].
+
+== Workshops
+
+- link:content/secrets/_index.md[Securing Your .NET Container Secrets]
+
+
+
+
