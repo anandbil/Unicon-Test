@@ -1,4 +1,4 @@
-﻿@model UnicornStore.Models.Blessing
+@model UnicornStore.Models.Blessing
 
 @{
     ViewBag.Title = "Create";
@@ -69,7 +69,7 @@
 
 @section Scripts {
     @*TODO : Until script helpers are available, adding script references manually*@
-    @*@Scripts.Render("~/bundles/jqueryval")*@
+    @*<script src="~/bundles/jqueryval"></script> TODO: Verify the bundle or replace with static files. *@
     <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 }

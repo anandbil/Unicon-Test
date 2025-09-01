@@ -1,20 +1,21 @@
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
+// using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UnicornStore.Components;
+// using UnicornStore.Components; // This namespace doesn't exist in the project
 using UnicornStore.Models;
 using System.Text.Json;
-using HealthChecks.UI.Client;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Data.SqlClient;
+
+
 
 namespace UnicornStore
 {
@@ -95,7 +96,9 @@ namespace UnicornStore
             services.AddSession();
 
             // Add the system clock service
-            services.AddSingleton<ISystemClock, SystemClock>();
+            // Original: services.AddSingleton<ISystemClock, SystemClock>();
+            // Commented out as the Components namespace doesn't exist
+            // services.AddSingleton<ISystemClock, SystemClock>();
 
             // Configure Auth
             services.AddAuthorization(options =>
@@ -123,7 +126,8 @@ namespace UnicornStore
                 // During development use the ErrorPage middleware to display error information in the browser
                 app.UseDeveloperExceptionPage();
 
-                app.UseDatabaseErrorPage();
+                // Note: UseDatabaseErrorPage is no longer needed in .NET 8 as database exceptions
+                // are now handled by the developer exception page
             }
 
             //This is invoked when ASPNETCORE_ENVIRONMENT is 'Production' or 'Staging'
@@ -137,8 +141,7 @@ namespace UnicornStore
 
             app.UseHealthChecks("/health", new HealthCheckOptions()
             {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                Predicate = _ => true
             });
 
             app.UseHealthChecks("/liveness", new HealthCheckOptions

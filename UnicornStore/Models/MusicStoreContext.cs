@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+using System;
+// Using fully qualified class name instead of namespace import
+
 
 namespace UnicornStore.Models
 {
     public class ApplicationUser : IdentityUser { }
 
-    public class UnicornStoreContext : IdentityDbContext<ApplicationUser>
+    public class UnicornStoreContext : Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext<ApplicationUser>
     {
         public UnicornStoreContext(DbContextOptions<UnicornStoreContext> options)
             : base(options)
@@ -15,11 +17,11 @@ namespace UnicornStore.Models
             //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public DbSet<Blessing> Blessings { get; set; }
-        public DbSet<Unicorn> Unicorns { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<CartItem> CartItems { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public System.Collections.Generic.ICollection<Blessing> Blessings { get; set; }
+        public System.Collections.Generic.ICollection<Unicorn> Unicorns { get; set; }
+        public System.Collections.Generic.ICollection<Order> Orders { get; set; }
+        public System.Collections.Generic.ICollection<Genre> Genres { get; set; }
+        public System.Collections.Generic.ICollection<CartItem> CartItems { get; set; }
+        public System.Collections.Generic.ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

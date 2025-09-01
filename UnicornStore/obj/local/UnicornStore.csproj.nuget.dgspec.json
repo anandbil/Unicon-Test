@@ -1,0 +1,119 @@
+{
+  "format": 1,
+  "restore": {
+    "/tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/UnicornStore/UnicornStore.csproj": {}
+  },
+  "projects": {
+    "/tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/UnicornStore/UnicornStore.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/UnicornStore/UnicornStore.csproj",
+        "projectName": "UnicornStore",
+        "projectPath": "/tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/UnicornStore/UnicornStore.csproj",
+        "packagesPath": "/tmp/tempfspartition/QnetTransformArtifacts/packages",
+        "outputPath": "/tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/UnicornStore/obj/local/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/root/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/tmp/tempfspartition/QnetTransformArtifacts/mde-local-nuget-source": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1101",
+            "NU1605",
+            "NU1608",
+            "NU1701",
+            "NU1903"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "AspNetCore.HealthChecks.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "AspNetCore.HealthChecks.UI.Client": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.12, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration.CommandLine": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Diagnostics.HealthChecks": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/root/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

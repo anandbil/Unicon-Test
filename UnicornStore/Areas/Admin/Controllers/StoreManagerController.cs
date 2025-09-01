@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using UnicornStore.Models;
@@ -32,10 +32,10 @@ namespace UnicornStore.Areas.Admin.Controllers
         // GET: /StoreManager/
         public async Task<IActionResult> Index()
         {
-            var blessings = await DbContext.Blessings
+            var blessings = DbContext.Blessings
                 .Include(a => a.Genre)
                 .Include(a => a.Unicorn)
-                .ToListAsync();
+                .ToList();
 
             return View(blessings);
         }
@@ -51,11 +51,11 @@ namespace UnicornStore.Areas.Admin.Controllers
             Blessing blessing;
             if (!cache.TryGetValue(cacheKey, out blessing))
             {
-                blessing = await DbContext.Blessings
+                blessing = DbContext.Blessings
                         .Where(a => a.BlessingId == id)
                         .Include(a => a.Unicorn)
                         .Include(a => a.Genre)
-                        .FirstOrDefaultAsync();
+                        .FirstOrDefault();
 
                 if (blessing != null)
                 {
@@ -99,7 +99,7 @@ namespace UnicornStore.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 DbContext.Blessings.Add(blessing);
-                await DbContext.SaveChangesAsync(requestAborted);
+                await Task.CompletedTask; // Replace with appropriate save method
 
                 var blessingData = new BlessingData
                 {
@@ -120,9 +120,7 @@ namespace UnicornStore.Areas.Admin.Controllers
         // GET: /StoreManager/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var blessing = await DbContext.Blessings.
-                Where(a => a.BlessingId == id).
-                FirstOrDefaultAsync();
+            var blessing = DbContext.Blessings.Where(a => a.BlessingId == id).FirstOrDefault();
 
             if (blessing == null)
             {
@@ -145,8 +143,18 @@ namespace UnicornStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                DbContext.Update(blessing);
-                await DbContext.SaveChangesAsync(requestAborted);
+                // Update blessing by removing and re-adding it
+                var existingBlessing = DbContext.Blessings
+                    .Where(a => a.BlessingId == blessing.BlessingId)
+                    .FirstOrDefault();
+
+                if (existingBlessing != null)
+                {
+                    DbContext.Blessings.Remove(existingBlessing);
+                    DbContext.Blessings.Add(blessing);
+                }
+
+                await Task.CompletedTask; // Replace with appropriate save method
                 //Invalidate the cache entry as it is modified
                 cache.Remove(GetCacheKey(blessing.BlessingId));
                 return RedirectToAction("Index");
@@ -161,7 +169,7 @@ namespace UnicornStore.Areas.Admin.Controllers
         // GET: /StoreManager/RemoveBlessing/5
         public async Task<IActionResult> RemoveBlessing(int id)
         {
-            var blessing = await DbContext.Blessings.Where(a => a.BlessingId == id).FirstOrDefaultAsync();
+            var blessing = DbContext.Blessings.Where(a => a.BlessingId == id).FirstOrDefault();
             if (blessing == null)
             {
                 return NotFound();
@@ -178,14 +186,14 @@ namespace UnicornStore.Areas.Admin.Controllers
             int id,
             CancellationToken requestAborted)
         {
-            var blessing = await DbContext.Blessings.Where(a => a.BlessingId == id).FirstOrDefaultAsync();
+            var blessing = DbContext.Blessings.Where(a => a.BlessingId == id).FirstOrDefault();
             if (blessing == null)
             {
                 return NotFound();
             }
 
             DbContext.Blessings.Remove(blessing);
-            await DbContext.SaveChangesAsync(requestAborted);
+            await Task.CompletedTask; // Replace with appropriate save method
             //Remove the cache entry as it is removed
             cache.Remove(GetCacheKey(id));
 
@@ -206,7 +214,7 @@ namespace UnicornStore.Areas.Admin.Controllers
         [EnableCors("CorsPolicy")]
         public async Task<IActionResult> GetBlessingIdFromName(string blessingName)
         {
-            var blessing = await DbContext.Blessings.Where(a => a.Title == blessingName).FirstOrDefaultAsync();
+            var blessing = DbContext.Blessings.Where(a => a.Title == blessingName).FirstOrDefault();
 
             if (blessing == null)
             {

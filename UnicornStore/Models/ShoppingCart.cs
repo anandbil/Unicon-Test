@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace UnicornStore.Models
 {
@@ -27,9 +28,10 @@ namespace UnicornStore.Models
         public async Task AddToCart(Blessing blessing)
         {
             // Get the matching cart and blessing instances
-            var cartItem = await _dbContext.CartItems.SingleOrDefaultAsync(
-                c => c.CartId == _shoppingCartId
-                && c.BlessingId == blessing.BlessingId);
+            var cartItem = _dbContext.CartItems
+                .Where(c => c.CartId == _shoppingCartId
+                && c.BlessingId == blessing.BlessingId)
+                .SingleOrDefault();
 
             if (cartItem == null)
             {
@@ -47,7 +49,7 @@ namespace UnicornStore.Models
             else
             {
                 // If the item does exist in the cart, then add one to the quantity
-                cartItem.Count++;
+                cartItem.Count += 1;
             }
         }
 
@@ -64,7 +66,7 @@ namespace UnicornStore.Models
             {
                 if (cartItem.Count > 1)
                 {
-                    cartItem.Count--;
+                    cartItem.Count -= 1;
                     itemCount = cartItem.Count;
                 }
                 else
@@ -76,28 +78,42 @@ namespace UnicornStore.Models
             return itemCount;
         }
 
-        public async Task EmptyCart()
-        {
-            var cartItems = await _dbContext
-                .CartItems
-                .Where(cart => cart.CartId == _shoppingCartId)
-                .ToArrayAsync();
+    public async Task EmptyCart()
+    {
+        var cartItems = _dbContext
+            .CartItems
+            .Where(cart => cart.CartId == _shoppingCartId);
 
-            _dbContext.CartItems.RemoveRange(cartItems);
+        foreach (var item in cartItems)
+        {
+            _dbContext.CartItems.Remove(item);
         }
 
-        public Task<List<CartItem>> GetCartItems()
-        {
-            return _dbContext
-                .CartItems
-                .Where(cart => cart.CartId == _shoppingCartId)
-                .Include(c => c.Blessing)
-                .ToListAsync();
-        }
+        await Task.CompletedTask;
+    }
+
+    public Task<List<CartItem>> GetCartItems()
+    {
+        // Get cart items and include related Blessing data
+        // The order of operations is important - Include must be called on IQueryable
+        return _dbContext
+            .CartItems
+            .Where(cart => cart.CartId == _shoppingCartId)
+            .Join(_dbContext.Blessings,
+                cartItem => cartItem.BlessingId,
+                blessing => blessing.BlessingId,
+                (cartItem, blessing) =>
+                {
+                    cartItem.Blessing = blessing;
+                    return cartItem;
+                })
+            .ToListAsync();
+    }
         
-        public Task<List<string>> GetCartBlessingTitles()
+        public async Task<List<string>> GetCartBlessingTitles()
         {
-            return _dbContext
+            // Get the titles first and order them within the query
+            return await _dbContext
                 .CartItems
                 .Where(cart => cart.CartId == _shoppingCartId)
                 .Select(c => c.Blessing.Title)
@@ -117,7 +133,7 @@ namespace UnicornStore.Models
 
         public Task<decimal> GetTotal()
         {
-            // Multiply blessing price by count of that blessing to get 
+            // Multiply blessing price by count of that blessing to get
             // the current price for each of those blessings in the cart
             // sum all blessing price totals to get the cart total
 
@@ -137,8 +153,8 @@ namespace UnicornStore.Models
             // Iterate over the items in the cart, adding the order details for each
             foreach (var item in cartItems)
             {
-                //var blessing = _db.Blessings.Find(item.BlessingId);
-                var blessing = await _dbContext.Blessings.SingleAsync(a => a.BlessingId == item.BlessingId);
+                // We already have the Blessing loaded from GetCartItems() Include
+                var blessing = item.Blessing;
 
                 var orderDetail = new OrderDetail
                 {

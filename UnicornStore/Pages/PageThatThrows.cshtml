@@ -1,2 +1,8 @@
 @page
-@{ throw new InvalidOperationException(); }
+@namespace UnicornStore.Pages
+@model UnicornStore.Pages.PageThatThrowsModel
+@{
+    throw new InvalidOperationException();
+}
+
+@* Model definition moved to code-behind file PageThatThrows.cshtml.cs *@
